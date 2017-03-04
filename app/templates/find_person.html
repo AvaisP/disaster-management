@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block css %}
+	<link href="{% static "vendors/iCheck/skins/flat/green.css" %}" rel="stylesheet">
+    <!-- Datatables -->
+    <link href="{% static "vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" %}"rel="stylesheet">
+    <link href="{% static "vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" %}"rel="stylesheet">
+    <link href="{% static "vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" %}" rel="stylesheet">
+    <link href="{% static "vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" %}"rel="stylesheet">
+    <link href="{% static "vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2> Find missing person <small>Locate your near and dear ones</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <!--li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li-->
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <form class="form-horizontal form-label-left" enctype="multipart/form-data" method = "post" action = '/find_missing_person/'>
+                    	{% csrf_token %}
+                      <div class="form-group">
+                        <div class="col-sm-9">
+                          <div class="input-group">
+                            <input type="text" class="form-control" id = 'name' name = 'name' placeholder="name"><br/><br/>
+                            <input type="text" class="form-control" id = 'age' name = 'age' placeholder="age"><br/><br/>
+                            <input type="text" class="form-control" id = 'number' name = 'number' placeholder="number"><br/><br/>
+                            <input type="file" class="form-control" id = 'image' name = 'image'> <br/><br/>
+                            <div class="row col-md-6 col-md-offset-3">
+                            <span class="input-group-btn">
+                                              <button type="submit" class="btn btn-primary">Go!</button>
+                                          </span>
+                                          </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Victim <small>Details</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <!--ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul-->
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <p class="text-muted font-13 m-b-30">
+                      TODO: Insert Text Here
+                    </p>
+                    {% if notfound %}
+                    <p> We're sorry there is no information available on this person </p>
+                    {% else %}
+                    <table id="datatable-buttons" class="table table-striped table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Name </th>
+                          <th> Age </th>
+                          <th> Gender </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><a href="/victim/{{victim.id}}"> {{ victim.name }}  </a></td>
+                          <td>Age: {{ victim.age }} </td>
+                          <td>Gender: {{victime.gender}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+{% endblock %}
+{% block js %}
+	 <!-- iCheck -->
+    <script src="{% static "vendors/iCheck/icheck.min.js" %}"></script>
+    <!-- Datatables -->
+    <script src="{% static "vendors/datatables.net/js/jquery.dataTables.min.js" %}"></script>
+    <script src="{% static "vendors/datatables.net-bs/js/dataTables.bootstrap.min.js" %}"></script>
+    <script src="{% static "vendors/datatables.net-buttons/js/dataTables.buttons.min.js" %}"></script>
+    <script src="{% static "vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js" %}"></script>
+    <script src="{% static "vendors/datatables.net-buttons/js/buttons.flash.min.js" %}"></script>
+    <script src="{% static "vendors/datatables.net-buttons/js/buttons.html5.min.js" %}"></script>
+    <script src="{% static "vendors/datatables.net-buttons/js/buttons.print.min.js" %}"></script>
+    <script src="{% static "vendors/jszip/dist/jszip.min.js" %}"></script>
+    <script src="{% static "vendors/pdfmake/build/pdfmake.min.js" %}"></script>
+    <script src="{% static "vendors/pdfmake/build/vfs_fonts.js" %}"></script>
+    <!-- Datatables -->
+    <script>
+      $(document).ready(function() {
+        var handleDataTableButtons = function() {
+          if ($("#datatable-buttons").length) {
+            $("#datatable-buttons").DataTable({
+              dom: "Bfrtip",
+              buttons: [
+                {
+                  extend: "copy",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "csv",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "excel",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "pdfHtml5",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "print",
+                  className: "btn-sm"
+                },
+              ],
+              responsive: true
+            });
+          }
+        };
+
+        TableManageButtons = function() {
+          "use strict";
+          return {
+            init: function() {
+              handleDataTableButtons();
+            }
+          };
+        }();
+
+        $('#datatable').dataTable();
+
+        TableManageButtons.init();
+      });
+    </script>
+    <!-- /Datatables -->
+    <script type="text/javascript">
+{% endblock %}

@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+</head>
+
+<body>
+<h1>Result</h1>
+<ul>
+<li>Username: {{testtweet.username}}</li>
+<li>Screen name: {{testtweet.screenname}}</li>
+<li>Tweet: {{testtweet.tweet}}</li>
+<li>Time: {{testtweet.pub_time}}</li>
+</ul>
+
+<h1>Bigram Features</h1>
+{% if bigrams %}
+	[{%for bigram in bigrams %}
+		{{ bigram }} , 
+	{% endfor %}]
+{% else %}
+	<p>The tweet is empty</p>
+{% endif %}
+
+<h1>Sentiment Tag</h1>
+<ul>
+<li>Tag: {{tag_string}}</li>
+<li>POS log likelihood: {{pos}}</li>
+<li>NEG log likelihood: {{neg}}</li>
+</ul>
+</body>
+
+</html>

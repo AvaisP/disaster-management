@@ -1,0 +1,363 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    <!-- iCheck -->
+    <link href="{% static "vendors/iCheck/skins/flat/green.css" %}" rel="stylesheet">
+    <!-- bootstrap-wysiwyg -->
+    <link href="{% static "vendors/google-code-prettify/bin/prettify.min.css" %}" rel="stylesheet">
+    <!-- Select2 -->
+    <link href="{% static "vendors/select2/dist/css/select2.min.css" %}" rel="stylesheet">
+    <!-- Switchery -->
+    <link href="{% static "vendors/switchery/dist/switchery.min.css" %}" rel="stylesheet">
+    <!-- starrr -->
+    <link href="{% static "vendors/starrr/dist/starrr.css" %}" rel="stylesheet">
+    <!-- bootstrap-daterangepicker -->
+    <link href="{% static "vendors/bootstrap-daterangepicker/daterangepicker.css" %}" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="{% static "build/css/custom.min.css" %}" rel="stylesheet">
+{%endblock%}
+{% block content%}
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+  
+
+              <div class="row">
+              <div class="col-md-9 col-sm-9 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Status of the Hospitals<small>Capacity vs Current Status</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <canvas id="lineChart"></canvas>
+                  </div>
+                </div>
+                <br>
+                <br>
+                <h2 style="color: black">
+                <a href="/heatmap/{{did}}"> Go to the region's population hotspots heatmap</a>
+                </h2>
+
+              </div>
+
+              
+              <
+              <div class="col-md-9 col-sm-9 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Citizens in Vicinity <small>Radius:</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <canvas id="mybarChart"></canvas>
+                  </div>
+                </div>
+              </div>
+              
+        
+            </div>
+            <div class="row">
+
+          <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="x_panel">
+            
+            <div class="x_content">
+              <p class="text-muted font-13 m-b-30">
+                Manage Hospitals from here.
+              </p>
+              <table id="datatable-buttons" class="table table-striped table-bordered">
+                <thead>
+                   <tr>
+                    <th>
+                    
+                    Hospital
+                    
+                    </th>
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for hospobj,name in hosp_combined %}
+                    <tr>
+                      <td>
+                      <a href="/hospitalportal/{{hospobj.id}}">{{name}}</a>
+                      
+                      </td>
+                    </tr>
+                  {% endfor %} 
+                </tbody>
+                </table>
+              </div>      
+            </div>
+          </div>
+  
+</div>
+            <div class="clearfix"></div>
+           
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <footer>
+          <div class="pull-right">
+            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+      </div>
+    </div>
+{%endblock%}
+{%block js%}
+    <!-- jQuery -->
+    <script src="{% static "vendors/jquery/dist/jquery.min.js" %}"></script>
+    <!-- Bootstrap -->
+    <script src="{% static "vendors/bootstrap/dist/js/bootstrap.min.js" %}"></script>
+    <!-- FastClick -->
+    <script src="{% static "vendors/fastclick/lib/fastclick.js" %}"></script>
+    <!-- NProgress -->
+    <script src="{% static "vendors/nprogress/nprogress.js" %}"></script>
+    <!-- Chart.js -->
+    <script src="{% static "vendors/Chart.js/dist/Chart.min.js" %}"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="{% static "/build/js/custom.min.js" %}"></script>
+
+    <!-- Chart.js -->
+    <script>
+      Chart.defaults.global.legend = {
+        enabled: false
+      };
+
+      // Line chart
+      var ctx = document.getElementById("lineChart");
+      var lineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: {{hosp_arr|safe}},
+          datasets: [{
+            label: "My First dataset",
+            backgroundColor: "rgba(38, 185, 154, 0.31)",
+            borderColor: "rgba(38, 185, 154, 0.7)",
+            pointBorderColor: "rgba(38, 185, 154, 0.7)",
+            pointBackgroundColor: "rgba(38, 185, 154, 0.7)",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointBorderWidth: 1,
+            data: {{hosp_full}}
+          }, {
+            label: "My Second dataset",
+            backgroundColor: "rgba(3, 88, 106, 0.3)",
+            borderColor: "rgba(3, 88, 106, 0.70)",
+            pointBorderColor: "rgba(3, 88, 106, 0.70)",
+            pointBackgroundColor: "rgba(3, 88, 106, 0.70)",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgba(151,187,205,1)",
+            pointBorderWidth: 1,
+            data: {{hosp_empty}}
+          }]
+        },
+      });
+
+      // Bar chart
+      var ctx = document.getElementById("mybarChart");
+      var mybarChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ["1km", "2km", "3km", "4km"],
+          datasets: [{
+            label: 'Number of citizens in vicinity',
+            backgroundColor: "#26B99A",
+            data: [4, 8, 9, 16]
+          }]
+        },
+
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      });
+
+      // Doughnut chart
+      var ctx = document.getElementById("canvasDoughnut");
+      var data = {
+        labels: [
+          "Dark Grey",
+          "Purple Color",
+          "Gray Color",
+          "Green Color",
+          "Blue Color"
+        ],
+        datasets: [{
+          data: [120, 50, 140, 180, 100],
+          backgroundColor: [
+            "#455C73",
+            "#9B59B6",
+            "#BDC3C7",
+            "#26B99A",
+            "#3498DB"
+          ],
+          hoverBackgroundColor: [
+            "#34495E",
+            "#B370CF",
+            "#CFD4D8",
+            "#36CAAB",
+            "#49A9EA"
+          ]
+
+        }]
+      };
+
+      var canvasDoughnut = new Chart(ctx, {
+        type: 'doughnut',
+        tooltipFillColor: "rgba(51, 51, 51, 0.55)",
+        data: data
+      });
+
+      // Radar chart
+      var ctx = document.getElementById("canvasRadar");
+      var data = {
+        labels: ["Eating", "Drinking", "Sleeping", "Designing", "Coding", "Cycling", "Running"],
+        datasets: [{
+          label: "My First dataset",
+          backgroundColor: "rgba(3, 88, 106, 0.2)",
+          borderColor: "rgba(3, 88, 106, 0.80)",
+          pointBorderColor: "rgba(3, 88, 106, 0.80)",
+          pointBackgroundColor: "rgba(3, 88, 106, 0.80)",
+          pointHoverBackgroundColor: "#fff",
+          pointHoverBorderColor: "rgba(220,220,220,1)",
+          data: [65, 59, 90, 81, 56, 55, 40]
+        }, {
+          label: "My Second dataset",
+          backgroundColor: "rgba(38, 185, 154, 0.2)",
+          borderColor: "rgba(38, 185, 154, 0.85)",
+          pointColor: "rgba(38, 185, 154, 0.85)",
+          pointStrokeColor: "#fff",
+          pointHighlightFill: "#fff",
+          pointHighlightStroke: "rgba(151,187,205,1)",
+          data: [28, 48, 40, 19, 96, 27, 100]
+        }]
+      };
+
+      var canvasRadar = new Chart(ctx, {
+        type: 'radar',
+        data: data,
+      });
+
+      // Pie chart
+      var ctx = document.getElementById("pieChart");
+      var data = {
+        datasets: [{
+          data: [120, 50, 140, 180, 100],
+          backgroundColor: [
+            "#455C73",
+            "#9B59B6",
+            "#BDC3C7",
+            "#26B99A",
+            "#3498DB"
+          ],
+          label: 'My dataset' // for legend
+        }],
+        labels: [
+          "Dark Gray",
+          "Purple",
+          "Gray",
+          "Green",
+          "Blue"
+        ]
+      };
+
+      var pieChart = new Chart(ctx, {
+        data: data,
+        type: 'pie',
+        otpions: {
+          legend: false
+        }
+      });
+
+      // PolarArea chart
+      var ctx = document.getElementById("polarArea");
+      var data = {
+        datasets: [{
+          data: [120, 50, 140, 180, 100],
+          backgroundColor: [
+            "#455C73",
+            "#9B59B6",
+            "#BDC3C7",
+            "#26B99A",
+            "#3498DB"
+          ],
+          label: 'My dataset'
+        }],
+        labels: [
+          "Dark Gray",
+          "Purple",
+          "Gray",
+          "Green",
+          "Blue"
+        ]
+      };
+
+      var polarArea = new Chart(ctx, {
+        data: data,
+        type: 'polarArea',
+        options: {
+          scale: {
+            ticks: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    </script>
+
+    <!-- /Chart.js -->
+
+ {%endblock%}

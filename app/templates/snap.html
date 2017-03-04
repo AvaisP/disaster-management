@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block css %}
+	<style type="text/css">
+		body { font-family: Helvetica, sans-serif; }
+		h2, h3 { margin-top:0; }
+		form { margin-top: 15px; }
+		form > input { margin-right: 15px; }
+		#results { float:right; margin:20px; padding:20px; border:1px solid; background:#ccc; }
+	</style>
+	<link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<style>
+body{
+background:url("https://static1.squarespace.com/static/57d9931c579fb33ef19a899e/t/586ac9b4e58c624be9e99368/1483393474269/");
+background-size: cover;
+font-family:'Lora', 'Roboto Slab',serif,Helvetica;
+color : black;
+}
+h2, h3 { margin-top:0; }
+form { margin-top: 15px; }
+form > input { margin-right: 15px; }
+#results { float:right; margin:78px;margin-right:100px; padding:20px; border:1px solid; background:#fff;border-radius : 10px; color:#000000; font-size:16px;align-self:center; }
+
+
+
+</style>
+{% endblock %}
+{% block content%}
+{% if show %}
+<div class="alert alert-success">
+  <strong>Success!</strong> Victim added.
+</div>
+{% endif %}
+	<div id="results" >Your captured image will appear here</div>
+<h1>Take Snapshot</h1>
+<h3>320x240</h3>
+<div id="my_camera"></div>
+<!-- First, include the Webcam.js JavaScript Library -->
+<script type="text/javascript" src="{% static "js/webcam.js" %}"></script>
+<!-- Configure a few settings and attach camera -->
+
+<!-- A button for taking snaps -->
+<div align = "center">
+<form>
+<input type=button class = "btn btn-primary btn-lg " value="Take Snapshot" onClick="take_snapshot()">
+</form>
+<div id="alerts"> </div>
+<div class="col-md-12 col-sm-12 col-xs-12" id='hiddenForm' style="display: none;">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2> Victim Details</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <!--li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li-->
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <form class="form-horizontal form-label-left" method = "post" action = '/saveVictim/'>
+                    	{% csrf_token %}
+                      <div class="form-group">
+                        <div class="col-md-offset-3 col-md-6">
+                          <div class="input-group">
+                            <input type="text" class="form-control" id = 'name' name = 'name' placeholder="name"><br/><br/>
+                            <input type="text" class="form-control" id = 'age' name = 'age' placeholder="age"><br/><br/>
+                            <input type="text" class="form-control" id = 'gender' name = 'gender' placeholder="gender"><br/><br/>
+                            <span class="input-group-btn">
+                                              <button type="submit" class="btn btn-primary">Go!</button>
+                                          </span>
+                                          </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+<!-- Code to handle taking the snapshot and displaying it locally -->
+	
+	<!-- Code to handle taking the snapshot and displaying it locally -->
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static "js/webcam.js" %}"></script>
+	
+	<!-- Configure a few settings and attach camera -->
+	<script language="JavaScript">
+		Webcam.set({
+			width: 320,
+			height: 240,
+			image_format: 'jpeg',
+			jpeg_quality: 90
+		});
+		Webcam.attach( '#my_camera' );
+	</script>
+<script language="JavaScript">
+		function take_snapshot() {
+			// take snapshot and get image data
+			Webcam.snap( function(data_uri) {
+				// display results in page
+				 Webcam.upload( data_uri, '/upload/', function(code, text) {
+				 		console.log('code:' + code);
+				 		text = JSON.parse(text);
+						if (text["found"] == "True"){
+							console.log('text:' + text);
+							document.getElementById('alerts').innerHTML = 
+								'<div class="alert alert-warning" style="color: black;">' + 
+								  '<strong>Relief already handed out!</strong>' +
+								'</div>'
+						}
+						if (text["found"] == "False"){
+							console.log('text:' + text);
+							document.getElementById('alerts').innerHTML = 
+								'<div class="alert alert-success" style="color: black;">' + 
+								  '<strong>Hand out relief!</strong>' +
+								'</div>';
+							document.getElementById('hiddenForm').style.display = 'block';
+						}
+					} );
+				document.getElementById('results').innerHTML = 
+					'<h2>Here is your image:</h2>' + 
+					'<img src="'+data_uri+'"/>';
+			} );
+		}
+	</script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+{% endblock %}

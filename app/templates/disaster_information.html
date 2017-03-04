@@ -1,0 +1,340 @@
+{% extends 'base.html' %}
+{% block content %}
+{%load static%}
+
+{% block css %}
+    <!-- iCheck -->
+    <link href="{% static "vendors/iCheck/skins/flat/green.css" %}" rel="stylesheet">
+    <!-- bootstrap-wysiwyg -->
+    <link href="{% static "vendors/google-code-prettify/bin/prettify.min.css" %}" rel="stylesheet">
+    <!-- Select2 -->
+    <link href="{% static "vendors/select2/dist/css/select2.min.css" %}" rel="stylesheet">
+    <!-- Switchery -->
+    <link href="{% static "vendors/switchery/dist/switchery.min.css" %}" rel="stylesheet">
+    <!-- starrr -->
+    <link href="{% static "vendors/starrr/dist/starrr.css" %}" rel="stylesheet">
+    <!-- bootstrap-daterangepicker -->
+    <link href="{% static "vendors/bootstrap-daterangepicker/daterangepicker.css" %}" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="{% static "build/css/custom.min.css" %}" rel="stylesheet">
+{%endblock%}
+<style type="text/css">
+  button.accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+}
+
+button.accordion.active, button.accordion:hover {
+    background-color: #ddd;
+}
+
+button.accordion:after {
+    content: '\002B';
+    color: #777;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+}
+
+button.accordion.active:after {
+    content: "\2212";
+}
+
+div.panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+</style>
+<div class="row">
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Enter Further Details<small>please</small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <br />
+                    <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" method="POST" action="/disaster/{{id}}">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Enter name of disaster<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="name" required="required" class="form-control col-md-7 col-xs-12" name="name">
+                        </div>
+                      </div>
+                      <div class="form-group" rows="3">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name" >Enter description of the disaster<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <textarea class="form-control" rows="4" placeholder="This is the information that will be sent to victims and helpers" name="description"></textarea>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Enter the radius of area affected<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="radius" name="radius" required="required" class="form-control col-md-7 col-xs-12" placeholder="In KM's">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Notify Citizens in area<span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <label>
+                              <input type="checkbox" class="flat" checked="checked" name="notify_citizens" id="notify_citizens"> Checked
+                            </label>
+                        </div>
+                      </div>
+                      <br>
+                      <br>
+                      <br>
+                      <iframe
+                  width="560"
+                  height="400"
+                  frameborder="0" style="border:0"
+                  src="https://www.google.com/maps/embed/v1/place?key=
+                    &q={{event.lat}},{{event.lng}}" allowfullscreen>
+
+
+
+
+                </iframe> 
+                      <div class="ln_solid"></div>
+                      <div class="form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                        <input type="submit" name="submit" class="btn btn-success">
+                        </div>
+                      </div>
+
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+
+</div>             
+{%endblock%}
+
+{%block js%}
+   
+  
+  <!-- iCheck -->
+    <script src="{% static "vendors/iCheck/icheck.min.js" %}"></script>
+    <!-- Datatables -->
+    
+    <script src="{% static "vendors/datatables.net/js/jquery.dataTables.min.js" %}"></script>
+    <script src="{% static "vendors/datatables.net-bs/js/dataTables.bootstrap.min.js" %}"></script>
+    <script src="{% static "vendors/datatables.net-buttons/js/dataTables.buttons.min.js" %}"></script>
+    <script src="{% static "vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js" %}"></script>
+    <script src="{% static "vendors/datatables.net-buttons/js/buttons.flash.min.js" %}"></script>
+    <script src="{% static "vendors/datatables.net-buttons/js/buttons.html5.min.js" %}"></script>
+    <script src="{% static "vendors/datatables.net-buttons/js/buttons.print.min.js" %}"></script>
+    <script src="{% static "vendors/jszip/dist/jszip.min.js" %}"></script>
+    <script src="{% static "vendors/pdfmake/build/pdfmake.min.js" %}"></script>
+    <script src="{% static "vendors/pdfmake/build/vfs_fonts.js" %}"></script>
+    <script src="{% static "vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js" %}"></script>
+    <script src="{% static "vendors/jquery.hotkeys/jquery.hotkeys.js" %}"></script>
+    <script src="{% static "vendors/google-code-prettify/src/prettify.js" %}"></script>
+    
+    <!-- jQuery Tags Input -->
+    <script src="{% static "vendors/jquery.tagsinput/src/jquery.tagsinput.js" %}"></script>
+    <!-- Switchery -->
+    <script src="{% static "vendors/switchery/dist/switchery.min.js" %}"></script>
+    <!-- Select2 -->
+    <script src="{% static "vendors/select2/dist/js/select2.full.min.js" %}"></script>
+    <!-- Parsley -->
+    <script src="{% static "vendors/parsleyjs/dist/parsley.min.js" %}"></script>
+    <!-- Autosize -->
+    <script src="{% static "vendors/autosize/dist/autosize.min.js" %}"></script>
+    <!-- jQuery autocomplete -->
+    <script src="{% static "vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js" %}"></script> 
+    <!-- Datatables -->
+    <!-- Custom Theme Scripts -->
+<script src="{% static "vendors/iCheck/icheck.min.js" %}"></script>
+    <!-- Datatables -->
+    <script>
+              var acc = document.getElementsByClassName("accordion");
+              var i;
+
+              for (i = 0; i < acc.length; i++) {
+                acc[i].onclick = function() {
+                  this.classList.toggle("active");
+                  var panel = this.nextElementSibling;
+                  if (panel.style.maxHeight){
+                    panel.style.maxHeight = null;
+                  } else {
+                    panel.style.maxHeight = panel.scrollHeight + 'px';
+                  } 
+                }
+              }
+    </script>
+    <script>
+      $(document).ready(function() {
+        var handleDataTableButtons = function() {
+          if ($("#datatable-buttons").length) {
+            $("#datatable-buttons").DataTable({
+              dom: "Bfrtip",
+              buttons: [
+                {
+                  extend: "copy",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "csv",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "excel",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "pdfHtml5",
+                  className: "btn-sm"
+                },
+                {
+                  extend: "print",
+                  className: "btn-sm"
+                },
+              ],
+              responsive: true
+            });
+          }
+        };
+
+        TableManageButtons = function() {
+          "use strict";
+          return {
+            init: function() {
+              handleDataTableButtons();
+            }
+          };
+        }();
+
+        $('#datatable').dataTable();
+
+        $('#datatable-keytable').DataTable({
+          keys: true
+        });
+
+        $('#datatable-responsive').DataTable();
+
+        $('#datatable-scroller').DataTable({
+          ajax: "js/datatables/json/scroller-demo.json",
+          deferRender: true,
+          scrollY: 380,
+          scrollCollapse: true,
+          scroller: true
+        });
+
+        $('#datatable-fixed-header').DataTable({
+          fixedHeader: true
+        });
+
+        var $datatable = $('#datatable-checkbox');
+
+        $datatable.dataTable({
+          'order': [[ 1, 'asc' ]],
+          'columnDefs': [
+            { orderable: false, targets: [0] }
+          ]
+        });
+        $datatable.on('draw.dt', function() {
+          $('input').iCheck({
+            checkboxClass: 'icheckbox_flat-green'
+          });
+        });
+
+        TableManageButtons.init();
+      });
+    </script>
+
+{%endblock%}
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

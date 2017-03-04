@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Leaflet Web Map</title>
+
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js
+"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+<style>
+
+
+#map1 {
+    width: 1100px;
+    height:900px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+
+
+
+<div id="map1"></div>
+
+   
+<!--<input id="6" type="checkbox" data-something="6 php"  name="interest" value="php">PHP<br> -->  
+
+
+
+</body>
+
+
+
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_admin.geojson"></script>
+<!--<script src="https://raw.githubusercontent.com/calvinmetcalf/leaflet-ajax/master/dist/leaflet.ajax.min.js" type="text/javascript"></script>-->
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_roads.geojson"></script>
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_amenities.geojson"></script>
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_transport_points.geojson"></script>
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_barrierways.geojson"></script>
+<!--
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_aeroways.geojson"></script>
+
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_landusages.geojson"></script>
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_barrierpoints.geojson"></script>
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_buildings.geojson"></script>
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_landusages.geojson"></script>
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_places.geojson"></script>
+
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_roads_gen0.geojson"></script>
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_transport_areas.geojson"></script>
+
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_waterways.geojson"></script>
+-->
+
+<!--<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_housenumbers.geojson"></script>
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_housenumbers_interpolated.geojson"></script>
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_waterareas.geojson"></script>
+<script type="text/javascript" src="/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_roads_gen1.geojson"></script>-->
+
+<script type="text/javascript">
+
+    //var map2 = L.map('map2',{scrollWheelZoom:true}).setView([13.100, 80.200], 12);
+    //L.geoJson(ciaeroways).addTo(map2);
+</script>
+<!--<script type="text/javascript">
+	$(document).ready(function() {
+    $("div.bhoechie-tab-menu>div.list-group>a").click(function(e) {
+        e.preventDefault();
+        $(this).siblings('a.active').removeClass("active");
+        $(this).addClass("active");
+        var index = $(this).index();
+        $("div.bhoechie-tab>div.bhoechie-tab-content").removeClass("active");
+        $("div.bhoechie-tab>div.bhoechie-tab-content").eq(index).addClass("active");
+    });
+});
+</script>-->
+
+<!--<script>
+    $(function(){
+  $('input[type="checkbox"]').change(function(){
+    var id=$(this).attr('id');
+    var something = $(this).attr('data-something');
+    var value=$(this).val();
+    if ($(this).prop('checked')){
+        // do something
+        if (value == "Airways") {
+        	$('#map1').prev('map1').prop('id', 'map2');
+        	var map2 = L.map('map2',{scrollWheelZoom:true}).setView([13.100, 80.200], 12);
+
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map2);
+    L.geoJson(ciaeroways).addTo(map2);
+        	/*var map1 = L.map('map1',{scrollWheelZoom:true}).setView([13.100, 80.200], 12);
+
+    		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map1);
+    		L.geoJson(ciaeroways).addTo(map1);*/
+        } elseif (value == "Roads") {
+       		$('#map2').prev('map2').prop('id', 'map3');
+       		var map3 = L.map('map3',{scrollWheelZoom:true}).setView([13.100, 80.200], 12);
+
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map3);
+    L.geoJson(ciroads).addTo(map3);
+        	/*var map1 = L.map('map1',{scrollWheelZoom:true}).setView([13.100, 80.200], 12);
+
+
+    		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map1);
+    		L.geoJson(ciroads).addTo(map1);*/
+
+        }
+    		        alert('id:'+id+' something:'+something+' value:'+value);
+
+        }
+  });
+  
+});
+ </script>-->
+
+<script>
+
+
+    /*L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map1);
+    L.geoJson(ciadmin).addTo(map1);*/
+
+	/*var geojsonLayer = new L.GeoJSON.AJAX("/Users/swappy/Downloads/chennai_india.imposm-geojson/chennai_india_admin.geojson");       
+    geojsonLayer.addTo(map);*/
+
+    // parse the geojson (very simplified example here)
+//var aeroways = L.geoJson(ciaeroways, {});
+var roads = L.geoJson(ciroads, {});
+//var old_roads = L.geoJson(ciroads_gen0, {});
+//var waterways = L.geoJson(ciwaterways, {});
+var transport_points = L.geoJson(citransport_points, {});
+//var landusages = L.geoJson(cilandusages, {});
+//var places = L.geoJson(ciplaces, {});
+var amenities = L.geoJson(ciamenities, {});
+var barrierways = L.geoJson(cibarrierways, {});
+//ar barrierpoints = L.geoJson(cibarrierpoints, {});
+//var buildings = L.geoJson(cibuildings, {});
+//var transport_areas = L.geoJson(citransport_areas, {});
+
+// from there, similar to the example: 
+var maplayers = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {});
+
+// initialize the map
+var map = L.map('map1', {
+    center: [13.100, 80.200],
+    zoom: 12,
+    layers: [maplayers]
+});
+
+// specify the basemap and overlays to put in the layers control
+var baseMaps = {
+    "Location": maplayers,
+};
+
+var overlayMaps = {
+    "Roads": roads,
+//    "Aeroways": aeroways,
+//    "Waterways" : waterways,
+    "Amenities" : amenities,
+    "Barrierways" : barrierways,
+//    "Transport Areas" : transport_areas,
+//    "Buildings" : buildings,
+//    "Landusages" : landusages,
+//    "Barrier points" : barrierpoints,
+    "Transport Points" : transport_points
+//    "Places" : places,
+//    "Old Routes" : old_roads
+};
+
+// initialize up the L.control.layers
+L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+
+	
+
+    
+</script>
+
+</html>

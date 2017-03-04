@@ -1,0 +1,29 @@
+{% load bootstrap3 %}
+<!DOCTYPE HTML>
+<html>
+<head>
+<script src='{{ STATIC_URL }}jquery-2.0.3.js' type="text/javascript"></script>
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<style>
+#search {margin-top: 200px;}
+</style>
+</head>
+
+<body>
+<div class='container' id='wrapper'>
+<div class='row' id='search'>
+<center><h1>Twitter Sentiment Visualization</h1>
+<form action='/classifier/index' method='post' role='form' class='form-inline'>{% csrf_token %}
+	{{ form.non_field_errors }}
+	<div class='form-group'>
+		{{ form.keyword.errors }}
+		{{ form.keyword }}
+	</div>
+	<button type='submit' class='btn btn-primary'>Submit</button>
+</form></center>
+</div>
+</div>
+</body>
+
+</html>

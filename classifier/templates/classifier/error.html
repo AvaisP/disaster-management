@@ -1,0 +1,15 @@
+{% load bootstrap_toolkit %}
+
+<html>
+<head>
+<script src='{{ STATIC_URL }}jquery-2.0.3.js' type="text/javascript"></script>
+{% bootstrap_stylesheet_tag %}
+{% bootstrap_javascript_tag %}
+</head>
+
+<body>
+<h1>Error</h1>
+<p>{{e_str}}</p>
+</body>
+
+</html>

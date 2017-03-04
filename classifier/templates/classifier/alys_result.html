@@ -1,0 +1,269 @@
+{% load bootstrap3 %}
+
+<html>
+<head>
+<script src='{{ STATIC_URL }}jquery-2.0.3.js' type="text/javascript"></script>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var piechart_data = google.visualization.arrayToDataTable([
+          ['Sentiment', 'count'],
+          ['Happy', {{ pos }}],
+          ['Unhappy', {{ neg }}]
+        ]);
+		
+		var timeline_data = google.visualization.arrayToDataTable([
+			['Time', 'Happy', 'Unhappy'],
+			{% autoescape off %}
+			{% for entry in timeline %}
+			{{entry}},
+			{% endfor %}
+			{% endautoescape %}
+		]);
+
+        var piechart_options = {
+			title: 'How many tweets are happy about the topic?',
+			pieHole: 0.4,
+			height: 300,
+			width: 400,
+			chartArea: {width: '70%', height: '100%'},
+			colors: ['#037F30','#4D75FF'],
+        };
+		
+		var timeline_options = {
+			title: 'timeline',
+			isStacked: true,
+			chartArea: {width: '90%', height: '70%'},
+			height: 300,
+			width: 1100,
+			series: [{color: '#037F30'}, {color: '#4D75FF'}],
+		};
+
+        var piechart = new google.visualization.PieChart(document.getElementById('piechart'));
+		var timeline = new google.visualization.ColumnChart(document.getElementById('timeline'));
+        piechart.draw(piechart_data, piechart_options);
+		timeline.draw(timeline_data, timeline_options);
+      }
+</script>
+
+<style>
+#mapdiv {
+width: 960px;
+height: 500px;
+}
+
+#tweet-content {
+	font-size: 11px;
+}
+	
+.my-fluid-container {
+	padding-left: 100px;
+	padding-right: 100px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#table-wrapper {
+	height: 310px;
+	margin-top: 10px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+.chart-wrapper {
+	margin-top: 10px;
+	height: 310px;
+	overflow-x: scroll;
+	overflow-y: hidden;
+}
+
+thead {
+	font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-default" role="navigation">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <a class="navbar-brand" href="#">Twitter Sentiment Visualization</a>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <form class="navbar-form navbar-left" role="search" action='/classifier/index' method='post'>{% csrf_token %}
+      <div class="form-group">
+        {{ form.keyword }}
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</nav>
+
+<div class='my-fluid-container'>
+
+<div class='row'>
+<h2>Result for "{{ keyword }}"</h2>
+</div>
+
+<div class='row'>
+<div class="panel panel-primary">
+<div class="panel-heading">Total tweets: {{ len }}</div>
+<div class="panel-body">
+<ul class="nav nav-tabs">
+	<li><a href="#location" data-toggle="tab">Location</a></li>
+	<li><a href="#pie-chart" data-toggle="tab">Pie Chart</a></li>
+	<li><a href="#time-line" data-toggle="tab">Timeline</a></li>
+	<li><a href="#tweet" data-toggle="tab">Tweets</a></li>
+</ul>
+
+<div class="tab-content">
+	<div class="tab-pane active" id="location">
+		<div class='chart-wrapper'><div id="location">
+			<div id="mapdiv"></div>
+
+		</div></div>
+	</div>
+	<div class="tab-pane " id="pie-chart">
+		<div class='chart-wrapper'><div id="piechart"></div></div>
+	</div>
+	<div class="tab-pane" id="time-line">
+		<div class='chart-wrapper'><div id="timeline"></div></div>
+	</div>
+	<div class="tab-pane" id="tweet"><div id='table-wrapper'>
+		<table class="table table-condenced table-bordered" id="tweet-content">
+		<thead>
+			<tr>
+			<td>time</td>
+			<!--<td>location</td>-->
+			<td>user</td>
+			<td>tag</td>
+			<td>tweet</td>
+			</tr>
+		</thead>
+		</tbody>
+			{% for tweet in format_tweets %}
+			<tr>
+			<td>{{tweet.2}}</td>
+			<td>{{tweet.1}}</td>
+			<td>{{tweet.3}} </td>
+			<td>{{tweet.0}}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+		</table>
+	</div></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class='row'>
+	<h1>About</hr>
+	
+</div>
+
+</div>
+</div>
+
+    <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+  <script type="text/javascript">
+    map = new OpenLayers.Map("mapdiv");
+    map.addLayer(new OpenLayers.Layer.OSM());
+    
+    epsg4326 =  new OpenLayers.Projection("EPSG:4326"); //WGS 1984 projection
+    projectTo = map.getProjectionObject(); //The map projection (Spherical Mercator)
+   
+    var lonLat = new OpenLayers.LonLat( 80.200, 13.100 ).transform(epsg4326, projectTo);
+          
+    
+    var zoom=14;
+    map.setCenter (lonLat, zoom);
+
+    var vectorLayer = new OpenLayers.Layer.Vector("Overlay");
+    
+    // Define markers as "features" of the vector layer:
+    var feature = new OpenLayers.Feature.Vector(
+            new OpenLayers.Geometry.Point( 80.199, 13.077 ).transform(epsg4326, projectTo),
+            {description:'Help needed injured under building collapse'} ,
+            {externalGraphic: 'http://www.clker.com/cliparts/j/Z/4/S/M/Q/pushpin-google-md.png', graphicHeight: 35, graphicWidth: 35, graphicXOffset:-12, graphicYOffset:-25  }
+        );    
+    vectorLayer.addFeatures(feature);
+    
+    var feature = new OpenLayers.Feature.Vector(
+            new OpenLayers.Geometry.Point( 80.322, 13.466).transform(epsg4326, projectTo),
+            {description:'Flooding and food shortages'} ,
+            {externalGraphic: 'http://www.clker.com/cliparts/j/Z/4/S/M/Q/pushpin-google-md.png', graphicHeight: 25, graphicWidth: 21, graphicXOffset:-12, graphicYOffset:-25  }
+        );    
+    vectorLayer.addFeatures(feature);
+
+    var feature = new OpenLayers.Feature.Vector(
+            new OpenLayers.Geometry.Point(  80.200 , 13.010 ).transform(epsg4326, projectTo),
+            {description:'Urgent Help Needed Here - Bridge collapse'} ,
+            {externalGraphic: 'http://www.clker.com/cliparts/j/Z/4/S/M/Q/pushpin-google-md.png', graphicHeight: 25, graphicWidth: 21, graphicXOffset:-12, graphicYOffset:-25  }
+        );    
+    vectorLayer.addFeatures(feature);
+
+    var feature = new OpenLayers.Feature.Vector(
+            new OpenLayers.Geometry.Point(  80.100 , 13.300 ).transform(epsg4326, projectTo),
+            {description:'Firemen required for victims - help '} ,
+            {externalGraphic: 'http://www.clker.com/cliparts/j/Z/4/S/M/Q/pushpin-google-md.png', graphicHeight: 25, graphicWidth: 21, graphicXOffset:-12, graphicYOffset:-25  }
+        );    
+    vectorLayer.addFeatures(feature);
+
+    var feature = new OpenLayers.Feature.Vector(
+            new OpenLayers.Geometry.Point(  80.200 , 13.10 ).transform(epsg4326, projectTo),
+            {description:'Shortage of fresh water - help food'} ,
+            {externalGraphic: 'http://www.clker.com/cliparts/j/Z/4/S/M/Q/pushpin-google-md.png', graphicHeight: 25, graphicWidth: 21, graphicXOffset:-12, graphicYOffset:-25  }
+        );    
+    vectorLayer.addFeatures(feature);
+
+    map.addLayer(vectorLayer);
+ 
+    
+    //Add a selector control to the vectorLayer with popup functions
+    var controls = {
+      selector: new OpenLayers.Control.SelectFeature(vectorLayer, { onSelect: createPopup, onUnselect: destroyPopup })
+    };
+
+    function createPopup(feature) {
+      feature.popup = new OpenLayers.Popup.FramedCloud("pop",
+          feature.geometry.getBounds().getCenterLonLat(),
+          null,
+          '<div class="markerContent">'+feature.attributes.description+'</div>',
+          null,
+          true,
+          function() { controls['selector'].unselectAll(); }
+      );
+      //feature.popup.closeOnMove = true;
+      map.addPopup(feature.popup);
+    }
+
+    function destroyPopup(feature) {
+      feature.popup.destroy();
+      feature.popup = null;
+    }
+    
+    map.addControl(controls['selector']);
+    controls['selector'].activate();
+      
+  </script>
+
+</body>
+
+</html>
